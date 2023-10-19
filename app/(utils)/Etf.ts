@@ -14,19 +14,26 @@ type Etf = {
 const EXCHANGE_ACCEPTED = ["AMEX", "NASDAQ"]
 const TICKERS_ACCEPTED = ["VSS", "VEU"]
 
-export const getAvailableEtf = async () => {
-	// Fetch available etfs from file to reduce api calls
-	const data = await fs.readFile(process.cwd() + '/available-etf.json', 'utf8')
+const getAllEtfFromDb = async () => {
+	const dbClient = await clientPromise
+	const db = dbClient.db('all-etf')
+	const allEtfs = await db.collection("all")
+		.find({})
+		.toArray()
 
-	const etfs: Etf[] = JSON.parse(data)
+	const etfs: Etf[] = JSON.parse(allEtfs[0].data)
+
+	return etfs
+}
+
+export const getAvailableEtf = async () => {
+	const etfs: Etf[] = await getAllEtfFromDb()
 
 	return etfs.filter((etf) => EXCHANGE_ACCEPTED.indexOf(etf.exchangeShortName) > -1 && (etf.name.includes('iShares') || TICKERS_ACCEPTED.indexOf(etf.symbol) > -1))
 }
 
 export const getProcessedEtf = async () => {
-	// Fetch available etfs from file to reduce api calls
-	const data = await fs.readFile(process.cwd() + '/available-etf.json', 'utf8')
-	const allEtf: Etf[] = JSON.parse(data)
+	const allEtf: Etf[] = await getAllEtfFromDb()
 
 	const dbClient = await clientPromise
 	const db = dbClient.db('etf')
