@@ -43,3 +43,16 @@ export const getProcessedEtf = async () => {
 
 	return etfs
 }
+
+export const getEtfRatesByTicker = async (ticker: string) => {
+	const client = await clientPromise
+
+	const db = client.db("etf")
+
+	const rates = await db
+		.collection(ticker.toUpperCase())
+		.find({})
+		.toArray()
+
+	return rates
+}
