@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { getAvailableEtf, getEtfRatesByTicker } from "../(utils)/Etf"
 import SimulationStats from "../(components)/SimulationStats"
+import BarChartSimulations from "../(components)/BarChartSimulations"
 
 type Props = {
 	params: {}
@@ -154,6 +155,13 @@ export default async function Simulate({ searchParams }: Props) {
 						inflation={-(+inflationPerYearNumber * 100 - 100)}
 					/>
 				</div>
+			</div>
+			<div className='w-full'>
+				<BarChartSimulations
+					simulations={simulations}
+					simulationsWithInflation={simulationsWithInflation}
+					totalInvestments={totalInvestments}
+				/>
 			</div>
 		</main>
 	)
