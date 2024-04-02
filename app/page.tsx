@@ -1,4 +1,5 @@
 import InputGroup from "./(components)/InputGroup"
+import CustomSelect from "./(components)/Select"
 import { getProcessedEtf } from "./(utils)/Etf"
 
 type Props = {
@@ -15,13 +16,7 @@ export default async function Home({ searchParams }: Props) {
 			<form action='/simulate' className='flex flex-col gap-2'>
 				<InputGroup>
 					<label htmlFor='ticker'>Choose ETF:</label>
-					<select name='ticker' id='ticker'>
-						{etfs.map((etf) => (
-							<option key={etf.symbol} value={etf.symbol}>
-								{etf.name}
-							</option>
-						))}
-					</select>
+					<CustomSelect name='ticker' options={etfs.map((etf) => ({ value: etf.symbol, label: `${etf.name} (${etf.symbol})` }))} />
 				</InputGroup>
 				<InputGroup>
 					<label htmlFor='portfolio_value'>Portfolio value:</label>
